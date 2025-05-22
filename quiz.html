@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #e0f7f9;
+            color: #1c313a;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .quiz-container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 600px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .question {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 12px;
+            border: 2px solid #26c6da;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #e0f2f1;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .option:hover {
+            background-color: #0097a7;
+            color: #fff;
+        }
+
+        .timer {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #00796b;
+        }
+
+        .result {
+            font-size: 1.5em;
+            color: #388e3c;
+            display: none;
+        }
+
+        .restart-btn {
+            background-color: #26a69a;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .restart-btn:hover {
+            background-color: #00897b;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="timer">Time Left: <span id="time">20</span>s</div>
+        <div class="question">Question will appear here</div>
+        <div class="options"></div>
+        <div class="result">Your score: <span id="score">0</span></div>
+        <button class="restart-btn">Restart Quiz</button>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Which gas do plants absorb from the atmosphere?",
+                options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+                answer: "Carbon Dioxide"
+            },
+            {
+                question: "What is the hardest natural substance on Earth?",
+                options: ["Iron", "Gold", "Diamond", "Platinum"],
+                answer: "Diamond"
+            },
+            {
+                question: "Which ocean is the largest?",
+                options: ["Atlantic", "Indian", "Pacific", "Arctic"],
+                answer: "Pacific"
+            },
+            {
+                question: "Who is known as the father of computers?",
+                options: ["Alan Turing", "Charles Babbage", "Bill Gates", "Steve Jobs"],
+                answer: "Charles Babbage"
+            },
+            {
+                question: "Which continent is known as the Dark Continent?",
+                options: ["Africa", "Asia", "South America", "Europe"],
+                answer: "Africa"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let timeLeft = 20;
+        let timerInterval;
+
+        const timerEl = document.getElementById('time');
+        const questionEl = document.querySelector('.question');
+        const optionsEl = document.querySelector('.options');
+        const resultEl = document.querySelector('.result');
+        const scoreEl = document.getElementById('score');
+        const restartBtn = document.querySelector('.restart-btn');
+
+        function loadQuestion() {
+            if (currentQuestion >= quizData.length) {
+                endQuiz();
+                return;
+            }
+            clearInterval(timerInterval);
+            timeLeft = 20;
+            timerEl.textContent = timeLeft;
+            startTimer();
+            const currentQuiz = quizData[currentQuestion];
+            questionEl.textContent = currentQuiz.question;
+            optionsEl.innerHTML = '';
+            currentQuiz.options.forEach(option => {
+                const button = document.createElement('button');
+                button.classList.add('option');
+                button.textContent = option;
+                button.onclick = () => checkAnswer(option);
+                optionsEl.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            if (selectedOption === quizData[currentQuestion].answer) {
+                score++;
+            }
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            questionEl.style.display = 'none';
+            optionsEl.style.display = 'none';
+            resultEl.style.display = 'block';
+            scoreEl.textContent = score;
+            restartBtn.style.display = 'inline-block';
+        }
+
+        restartBtn.addEventListener('click', () => {
+            currentQuestion = 0;
+            score = 0;
+            timeLeft = 20;
+            timerEl.textContent = timeLeft;
+            questionEl.style.display = 'block';
+            optionsEl.style.display = 'flex';
+            resultEl.style.display = 'none';
+            restartBtn.style.display = 'none';
+            loadQuestion();
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
