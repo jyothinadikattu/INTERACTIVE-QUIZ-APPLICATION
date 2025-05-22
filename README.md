@@ -11,3 +11,5 @@ The app displays multiple-choice questions one at a time with a countdown timer 
 User selections are evaluated instantly, and the score is tracked and shown at the end.
 Features include a restart option, clean UI design, and interactive button styling.
 Technologies used:HTML,CSS,JavaScript.
+OUTPUT:
+![Image](https://github.com/user-attachments/assets/005470ae-68fa-4554-8f3f-281a277a3ed5)
